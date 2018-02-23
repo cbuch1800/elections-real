@@ -1,0 +1,38 @@
+{% extends 'header.html' %}
+
+{% block title %}
+<div class='jumbotron jumbotron-fluid' style='margin-bottom:0;'>
+    <div class='container-fluid mx-auto'>
+        <h1 class='display-1'>Register as a Candidate.</h1>
+        <h1><small>Throw your hat in the ring and sign up here.</small></h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div class="w-75 card mx-auto">
+    <div class="card-body text-center">
+        {% if elections|length == 0 %}
+            <h2 class='card-title'>No elections available</h2>
+        {% else %}
+            <h2 class="card-title">Register as a candidate</h2>
+            <form method="POST" enctype="multipart/form-data" class="post-form">
+                {% csrf_token %}
+                <p><strong>Select an election:</strong><br>
+                {{form.ElectionID}}</p>
+                <!-- <p><strong>Enter your bio:</strong><br>
+                {{form.Bio}}</p>
+                <p><strong>Upload a campaign poster: </strong> 
+                {{form.Poster}}</p> -->
+                <button type="submit" class='button btn btn-outline-dark'>Register</button>
+            </form> 
+        {% endif %}
+    </div>
+</div>
+<br>
+
+
+
+{% endblock %}

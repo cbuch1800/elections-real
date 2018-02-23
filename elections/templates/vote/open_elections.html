@@ -1,0 +1,22 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+<br>
+<div class="w-50 card mx-auto">
+        <div class="card-body text-center">
+                {% if elections|length == 0 %}
+                        <h2 class="card-title">No elections available</h2>
+                        <p>There are no elections you are eligible to vote in at the moment.</p>
+                {% else %}
+                        <h2 class='card-title'>These elections are open for voting:</h2>
+                        <div class='list-group'>
+                        {% for election in elections %}
+                                <a href='/elections/{{election.id}}' class="list-group-item list-group-item-action"><p style='display: inline'><strong>{{election.Name}}</strong></p></a>                           
+                        {% endfor %}
+                        </div>
+                {% endif %}
+        </div>
+</div>
+
+{% endblock %}

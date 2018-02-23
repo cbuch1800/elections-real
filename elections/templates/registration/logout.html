@@ -1,0 +1,19 @@
+{% extends 'header.html' %}
+
+{% block nav %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div class="w-50 card mx-auto">
+  <div class="card-body text-center">
+    <h2 class="card-title">Logged Out</h2>
+    <p>You have been logged out.</p>
+    <p>Click  <a class='button btn btn-outline-dark' href={% url "login" %}>here</a>  to log back in.</p>
+  </div>
+</div>
+
+{% endblock %}

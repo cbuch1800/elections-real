@@ -1,0 +1,36 @@
+{% extends 'header.html' %}
+
+{% block nav %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+{% block content %}
+
+<br>
+<div class="w-50 card mx-auto">
+  <div class="card-body text-center">
+    <h2 class="card-title">Login</h2>
+    <form method="post">
+      {% csrf_token %}
+      <p>
+        Username<br>
+        {{ form.username }}
+      </p>
+      <p>
+        Password<br>
+        {{ form.password }}
+      </p>
+      {% if form.errors %}
+        <p>Incorrect username or password.</p>
+      {% endif %}
+      <button type="submit" class='btn btn-outline-dark mx-auto'>Login</button>
+    </form>
+    <a class='button btn btn-outline-dark' href='{% url "password_reset" %}'>Forgot Password</a><br><br>
+    <a class='button btn btn-outline-dark' href='{% url "elections:signup" %}'>Signup</a>
+  </div>
+</div>
+
+{% endblock %}
+
+{{form.username.errors}}

@@ -1,0 +1,18 @@
+<br>
+<p class='card-text text-center'><strong>Results:</strong></p>
+<div class="w-75 card mx-auto">
+    <div class="card-body text-center">
+        {% for result in results %}
+            {% for result_item in result %}
+                {% if forloop.first %}
+                    <p class='card-text text-center'><strong>{{result_item}}</strong></p>
+
+                {% else %}
+                    <p class='card-text text-center'>{{result_item}}</p>
+
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<br>

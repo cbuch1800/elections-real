@@ -1,0 +1,22 @@
+{% extends 'header.html' %}
+
+{% block nav %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+
+{% block content %}
+
+<br>
+<div class="w-75 card mx-auto">
+    <div class="card-body text-center">
+        <h2 class="card-title">Error 404</h2>
+        <p>This is not the page you're looking for.</p>
+        <p>He can go about his buisness.</p>
+        <a class='button btn btn-outline-dark' href='{% url "elections:home" %}'>Move along.</a><br>
+    </div>
+</div>
+<br>
+
+{% endblock %}

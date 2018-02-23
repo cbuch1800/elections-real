@@ -1,0 +1,19 @@
+
+<body>
+    <h1>Testing 1, 2</h1>
+    <meta id="candidate1" data-candidate="1">
+    <meta id="candidate2" data-candidate="2">
+</body>
+
+<script type="text/javascript">
+
+document.write("<p>")
+document.write("Hello, world!")
+document.write("</p>")
+
+var metatags = document.querySelector('meta[id="candidate1"]');
+var candidate = metatags.getAttribute("data-candidate");
+document.write(metatags, "<br>");
+document.write(candidate);
+
+</script>

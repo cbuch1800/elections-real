@@ -1,0 +1,46 @@
+{% extends 'header.html' %}
+
+{% block title %}
+<div class='jumbotron jumbotron-fluid' style='margin-bottom:0;'>
+    <div class='container-fluid mx-auto'>
+        <h1 class='display-1'>Meet Your Candidates.</h1>
+        <h1><small>Click on a candidate to view their profile.</small></h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div id="accordion" class='w-75 mx-auto'>
+
+    <h2>Click on a candidate to view more information</h2>
+
+    {% for election in elections %}
+        <div class="card">
+
+            <div class="card-header">
+                <h4 class='card-title'>{{election.Name}}
+                <button type="button" class="btn btn-outline-dark float-right" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{election.id}}"><i class="fa fa-navicon" style="font-size:24px"></i></button></h4>
+            </div>
+
+            <div id="collapse_{{election.id}}" class="collapse">
+                <div class="card-body">
+                    {% for candidate in candidates %}
+                        {% if candidate.ElectionID == election %}
+                            <div class='card'>
+                                <div class='card-header'>
+                                    <h6><a href='/u/{{candidate.id}}'>{{candidate.UserID.get_full_name}}</a></h6>
+                                </div>
+                                <div class='card-body'>
+                                    <p>{{candidate.Bio}}</p>
+                                </div>
+                            </div><br>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+        </div>
+    {% endfor %}
+
+</div>
+{% endblock %}

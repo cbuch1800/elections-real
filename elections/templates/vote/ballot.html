@@ -1,0 +1,114 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+{% for candidate in candidates %}
+    <meta id="cand" data-id="{{candidate.id}}" data-order="{{forloop.counter}}">
+    <!-- <h3>{{forloop.counter}}</h3> -->
+{% endfor %}
+<br>
+
+<div class='container'>
+    <div class='row'>
+
+        <div class='col-md-6'>
+            <div class='card card-body my-5 mx-auto'>
+                <div id='main'>
+                    {% for candidate in candidates %}
+                        <div class='w-75 card mx-auto'>
+                            <div class="card-body text-center">
+                                <p class='card-text'><strong>{{candidate.UserID.get_full_name}}</strong><input type="number" class='float-right'></p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <br>
+                <button id='send' type="submit" class='btn btn-outline-dark mx-auto'>Submit</button>
+            </div>
+        </div>
+        <div class='col-md-6'>
+            <div class='w-75 card mx-auto'>
+                <div class="card-body text-center">
+                    <p class='card-text'>This is the ballot paper.</p>
+                    <p class='card-body'>Choose carefully - you can only vote once and you can't change your mind once your ballot is cast.</p>
+                    <p class='card-text'>Rank as many or as few candidates as you want. Begin ranking from 1 and rank consecutively. Don't skip or duplicate rankings.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script> -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<!-- <script src="https://code.jquery.com/jquery-2.1.3.min.js" integrity="sha384-E7gp+UYBLS2XewcxoJbfi0UpGMHSvt9XyI9bH4YIw5GDGW8AlC+2J7bVBBlMFC6p" crossorigin="anonymous"></script> -->
+
+<script type="text/javascript">
+var csrftoken = Cookies.get('csrftoken')
+
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+
+// $(function() {
+//     $(".alert").alert('close')
+// });
+
+$(document).ready(function() {
+
+var metatags = document.getElementsByTagName('meta');
+var cands = [];
+for (var i = 0; i < metatags.length; i++) {
+    cands.push(metatags[i].dataset.id);
+    console.log(cands);
+};
+cands = JSON.stringify(cands);
+
+var button = $("#send");
+
+$(button).click(function() {
+    var vals = [];
+    $("#main :input").each(function(index) {
+        vals.push(this.value);
+    });
+  vals = JSON.stringify(vals);
+  console.log(vals);
+  var url = window.location.pathname;
+console.log(url);
+$.ajax({
+    method: "POST",
+    url: url,
+    data: {
+        'candidate_order': cands,
+        'rankings': vals,
+        },
+    dataType: 'json',
+    
+    success: function (data) {
+        if(data.valid == false){
+            alert(data.alert)
+        }else{  //On success
+            location.href = data.url;
+            alert(data.alert)}
+        },  
+    });
+
+    // error: function(xhr,errmsg,err) {
+    //     alert("Could not send URL to Django. Error: " + xhr.status + ": " + xhr.responseText);
+    // }
+    // });  
+});
+});
+// });
+
+</script>
+
+
+{% endblock %}

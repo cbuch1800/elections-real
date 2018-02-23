@@ -1,0 +1,23 @@
+{% extends 'header.html' %}
+
+{% block nav %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+
+{% block content %}
+
+<br>
+<div class="w-75 card mx-auto">
+    <div class="card-body text-center">
+        <h2 class="card-title">Error 500</h2>
+        <p>Internal server error.</p>
+        <p>This one's our fault, not yours.</p>
+        <p>Sorry about that.</p>
+        <a class='button btn btn-outline-dark' href='{% url "elections:home" %}'>Try again</a><br>
+    </div>
+</div>
+<br>
+
+{% endblock %}

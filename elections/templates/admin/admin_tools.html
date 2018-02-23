@@ -1,0 +1,164 @@
+{% extends 'header.html' %}
+
+{% block title %}
+<div class='jumbotron jumbotron-fluid' style='margin-bottom:0;'>
+    <div class='container-fluid mx-auto'>
+        <h1 class='display-1'>Welcome to Admin Tools.</h1>
+        <h1><small>Here you can control the ongoing elections.</small></h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class='row'>
+    <div class=col-lg-2></div>
+
+    <div  class=col-lg-8>
+
+        <br><br>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class='card-title'>View Results
+                    <button type="button" class="btn btn-outline-dark float-right" data-toggle="collapse" data-parent="#accordion" href="#collapse_one"><i class="fa fa-navicon" style="font-size:24px"></i></button></h4>
+                </div>
+                <div id="collapse_one" class="collapse">
+                    <div class="card-body">
+                        {% if results|length == 0 %}
+
+                            <p>Nothing here :(</p>
+                        
+                        {% else %}
+
+                            {% include 'posts/results.html' with results=results %}
+
+                        {% endif %}
+
+                        {% if result_formset|length == 0 %}
+
+                        {% else %}
+                            <p class='card-text text-center'><strong>Publicise Results:</strong></p>
+                            <form method="post" action="">
+                                {{ result_formset.management_form }}
+                                {% for form in result_formset %}
+                                    {% csrf_token %}
+                                    <div class='card'>
+                                        <div class='card-body w-75 mx-auto'>
+                                            <p class='card-text text-center'>{{form.instance}}: {{form.Public}}</p>
+                                            <p>{{form.id}}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                <div class='text-center'>
+                                    <br><button type="submit" class='btn btn-outline-dark' name='public_result'>Save</button>
+                                </div>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class='card-title'>Create an Election
+                    <button type="button" class="btn btn-outline-dark float-right" data-toggle="collapse" data-parent="#accordion" href="#collapse_two"><i class="fa fa-navicon" style="font-size:24px"></i></button></h4>
+                </div>
+                <div id="collapse_two" class="collapse">
+                    <div class="card-body w-75 mx-auto">
+                        <!-- <h4>Create a new election:</h4> -->
+                        <form method='post'>
+                            {% csrf_token %}
+                            
+                            
+                            <div class='row'>
+                                <div class='col-6 text-center'>
+                                    <p>Name<br>{{new_election.Name}}</p>
+                                </div>
+                                <div class='col-6 text-center'>
+                                    <p>Seats<br>{{new_election.Seats}}</p>
+                                </div>
+                            </div>
+                            <div class='row'>
+                                <div class='col-12 text-center'>
+                                    <p>Description<br>{{new_election.Description}}</p>
+                                    <p>Video Link<br>{{new_election.FlipGrid}}</p>
+                                    <button type="submit" class='btn btn-outline-dark' name='new_election'>Create</button><br>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class='card-title'>Election Settings
+                    <button type="button" class="btn btn-outline-dark float-right" data-toggle="collapse" data-parent="#accordion" href="#collapse_three"><i class="fa fa-navicon" style="font-size:24px"></i></button></h4>
+                </div>
+                <div id="collapse_three" class="collapse">
+                    <div class="card-body">
+                        <!-- <h4>Toggle election settings:</h4> -->
+                        <form method="post" action="">
+                            
+                            {{ formset.management_form }}
+                            {% for form in formset %}
+                                {% csrf_token %}
+                                <div class='card'>
+                                    <div class='card-body w-75 mx-auto'>
+                                        
+                                        <div class='row'>
+                                            <div class='col-6 text-center'>
+                                                
+                                                <p>Name<br>{{form.Name}}</p>
+                                            </div>
+                                            <div class='col-6 text-center'>
+                                                <p>Videos<br>{{form.FlipGrid}}</p>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='col-12 text-center'>
+                                                <p>Description<br>{{form.Description}}</p>
+                                            </div>
+                                        </div>
+                                        <div class='row'>
+                                            <div class='col-6 text-center'>
+                                                <p>Allow registration: {{form.CandidateReg}}</p>
+                                            </div>
+                                            <div class='col-6 text-center'>
+                                                <p>Allow voting: {{form.VotingOpen}}</p>
+                                            </div>
+                                        </div><p>{{form.id}}</p>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class='text-center'>
+                                <br><button type="submit" class='btn btn-outline-dark' name='edit_elections'>Save</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h4 class='card-title'>End Elections
+                    <button type="button" class="btn btn-outline-dark float-right" data-toggle="collapse" data-parent="#accordion" href="#collapse_four"><i class="fa fa-navicon" style="font-size:24px"></i></button></h4>
+                </div>
+                <div id="collapse_four" class="collapse">
+                    <div class="card-body">
+                        <div class="w-75 list-group mx-auto">
+                            {% for election in elections %}
+                                <a href='/tools/result/{{election.id}}/' class='list-group-item list-group-item-action'>{{election.Name}}</a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div><br><br>
+    </div>
+
+    <div class=col-lg-2></div>
+</div>
+{% endblock %}

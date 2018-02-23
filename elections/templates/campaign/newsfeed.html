@@ -1,0 +1,54 @@
+{% extends 'header.html' %}
+
+{% block title %}
+<div class='jumbotron jumbotron-fluid' style='margin-bottom:0;'>
+    <div class='container-fluid'>
+        <h1 class='display-1'>Welcome to Newsfeed.</h1>
+        <h1><small>Here you will find the most recent updates in ongoing elections.</small></h1>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+
+<div class='container-fluid'>
+    <div class=row>
+        <div class=col-sm-3>
+            <div class="w-100 mx-auto text-center">
+                <br><div class='card'>
+                    <div class='card-body'>
+                        <p><strong>Add Content</strong></p>
+                        <a class='button btn btn-outline-dark' href='{% url "elections:new_post" %}'>New Post</a><br><br>
+                        <a class='button btn btn-outline-dark' href='{% url "elections:new_image" %}'>New Image</a><br>
+                    </div>
+                </div><br>
+                <div class='card'>
+                    <div class='card-body'>
+                        <p><strong>Video Links</strong></p>
+                        {% for election in elections %}
+                            {% if election.FlipGrid|length > 0 %}
+                                <a class='button btn btn-outline-dark' href='{{election.FlipGrid}}'>{{election.Name}}</a><br>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class=col-sm-6>
+            <br>
+            {% for post in posts %}
+                {% if post.model_name == 'Post' %}
+                    {% include 'posts/text_post.html' with post=post %}
+                {% elif post.model_name == 'ImagePost' %}
+                    {% include 'posts/image_post.html' with post=post %}
+                {% endif %}
+            {% endfor %}
+        </div>
+
+        <div class=col-sm-3></div>
+
+    </div>
+</div>
+
+{% endblock %}

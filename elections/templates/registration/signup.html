@@ -1,0 +1,38 @@
+{% extends 'header.html' %}
+
+{% block nav %}
+{% endblock %}
+{% block messages %}
+{% endblock %}
+
+
+{% block content %}
+
+<br>
+<div class='container-fluid'>
+    <div class="w-75 card mx-auto">
+        <div class="card-body text-center">
+            <h2 class="card-title">Sign up</h2>
+            <form method="POST" enctype="multipart/form-data" class="post-form">
+                {% csrf_token %}
+                {% for field in form %}
+                    <p>
+                        <strong>{{field.label_tag}}</strong><br>
+                        {{field}}<br>
+                        {% if field.help_text %}
+                            {{field.help_text}}<br>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            {{error}}<br>
+                        {% endfor %}
+                    </p>
+                {% endfor %}
+                <button type="submit" class='button btn btn-outline-dark'>Sign up</button>
+            </form> 
+        </div>
+    </div>
+</div>
+<br>
+
+
+{% endblock %}

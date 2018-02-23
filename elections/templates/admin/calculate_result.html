@@ -1,0 +1,19 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+<br>
+<div class="w-75 card mx-auto">
+    <div class="card-body text-center">
+        <h2 class="card-title">{{election.Name}}</h2>
+        <p>Tick the box and click submit to end the election and calculate the result.</p>
+        <form method="post">
+            {% csrf_token %}
+            <p><strong>Complete Election: {{ form.BeginVoteCounting }}</strong></p>
+            <button type="submit" class='button btn btn-outline-dark'>Submit</button>
+        </form>
+    </div>
+</div>
+<br>
+
+{% endblock %}

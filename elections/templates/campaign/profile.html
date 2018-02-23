@@ -1,0 +1,53 @@
+{% extends 'header.html' %}
+
+{% block title %}
+<div class='jumbotron jumbotron-fluid' style='margin-bottom:0;'>
+    <div class='container-fluid'>
+        <h1 class='display-1'>{{candidate.UserID.get_full_name}}.</h1>
+        <h1><small>A candidate running in the {{candidate.ElectionID.Name}} election.</small></h1>
+    </div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<div class='container-fluid'>
+    <div class=row>
+        <div class=col-6>
+            <div class="w-100 mx-auto text-center">
+                <br><div class='card'>
+                    <div class='card-body'>
+                        <h2 class='card-title'>{{candidate.UserID.get_full_name}}</h2>
+                        <p>{{candidate.Bio}}</p>
+                        {% if candidate.Poster %}
+                            <img src="{{candidate.Poster.url}}" width=360><br>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class=col-6>
+            <div class="w-100 mx-auto text-center">
+                <br><div class='card'>
+                    <div class='card-body'>
+                        <h2 class='card-title'>{{candidate.UserID.first_name}}'s Posts</h2><br>
+                        {% if posts|length == 0 %}
+
+                        {% else %}
+                            {% for post in posts %}
+                                {% if post.model_name == 'Post' %}
+                                    {% include 'posts/text_post.html' with post=post %}
+                                {% elif post.model_name == 'ImagePost' %}
+                                    {% include 'posts/image_post.html' with post=post %}
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
