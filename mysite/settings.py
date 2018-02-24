@@ -26,8 +26,9 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
 
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
+# ALLOWED_HOSTS = ['electdc.me']
 
 # Application definition
 
@@ -127,6 +128,8 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
+STATIC_ROOT = '/home/elections/staticfiles/'
+
 LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/login/'
 LOGIN_EXEMPT_URLS = (
@@ -147,3 +150,22 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'mysite/media')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # During development only
+
+LOGGING = {
+	'version':1,
+	'disable_existing_loggers':False,
+	'handlers':{
+		'file':{
+			'level':'DEBUG',
+			'class':'logging.FileHandler',
+			'filename':'/home/elections/logs/djang_debug.log',
+		},
+	},
+	'loggers':{
+		'django':{
+			'handlers':['file'],
+			'level':'DEBUG',
+			'propagate':True,
+		},
+	},
+}

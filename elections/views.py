@@ -17,7 +17,9 @@ from .tokens import account_activation_token
 from .electoral_system import CountSTV
 import json
 from pprint import pprint
+import logging
 
+logger = logging.getLogger(__name__)
 #  Create your views here.
 
 
