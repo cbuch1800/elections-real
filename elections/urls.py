@@ -22,9 +22,9 @@ urlpatterns = [
     url(r'^tools/$', admin_tools, name='tools'),
     url(r'^tools/result/(\d+)/$', get_results, name='get_results'),
     url(r'^password/new/$', password_change, name='change_password'),
-    url(r'^signup/$', signup, name='signup'),
-    url(r'^signup/sent/$', account_activation_sent, name='account_activation_sent'),
-    url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', activate, name='activate'),
+    # url(r'^signup/$', signup, name='signup'),
+    # url(r'^signup/sent/$', account_activation_sent, name='account_activation_sent'),
+    # url(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', activate, name='activate'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.DEBUG:
