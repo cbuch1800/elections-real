@@ -61,7 +61,7 @@ class NewElectionForm(forms.ModelForm):
 
     class Meta:
         model = Election
-        fields = ['Name','Description','Seats','FlipGrid']
+        fields = ['Name','Description','Seats','FlipGrid', 'Gender',]
 
 # class EditAccountForm(forms.ModelForm):
 
@@ -118,3 +118,13 @@ class SignUpForm(UserCreationForm):
 class CalculateResultForm(forms.Form):
 
     BeginVoteCounting = forms.BooleanField()
+
+class GetCSVForm(forms.Form):
+
+    csv_file = forms.FileField()
+
+class CreateUserForm(UserCreationForm):
+
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 'password2']

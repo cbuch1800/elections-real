@@ -35,6 +35,8 @@ class Election(models.Model):
     CandidateReg = models.BooleanField(default=True)
     VotingOpen = models.BooleanField(default=False)
     Description = models.CharField(max_length=255, null=True, blank=True)
+    GENDERS = (("M","Male"), ("F","Female"))
+    Gender = models.CharField(max_length=1, choices=GENDERS, default="M")
     Seats = models.IntegerField(default=7)
     FlipGrid = models.URLField(null=True, blank=True)
     Complete = models.BooleanField(default=False)
@@ -105,6 +107,9 @@ class Result(models.Model):
     ElectionID = models.ForeignKey(Election, on_delete=models.CASCADE)
     Results = models.TextField()
     Public = models.BooleanField(default=False)
+
+    def __str__(self):
+        return "{} Result".format(self.ElectionID.Name)
 
     class Meta:
         permissions = (("can_view_results","Can view election results"),)

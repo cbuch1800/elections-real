@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404, JsonResponse
+from django.http import HttpResponse, Http404, JsonResponse, HttpResponseRedirect
 from django.contrib.auth.decorators import permission_required
 from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib import messages
@@ -10,6 +10,7 @@ from django.forms import modelformset_factory
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_bytes, force_text
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.crypto import get_random_string
 from django.template.loader import render_to_string
 from .models import *
 from .forms import *
@@ -135,8 +136,8 @@ def add_candidate(request):
             return redirect(reverse('elections:home'))
     else:
         form = AddCandidateForm(request.user)
-        elections = Election.objects.all().exclude(candidate__UserID=request.user)
-        # filtering of the elections to decide which options can show - not already registered,correct gender,correct user type,Before deadline
+        elections = Election.objects.all().exclude(candidate__UserID=request.user).filter(Gender=request.user.Profile.Gender).filter(CandidateReg=True)
+        # filtering of the elections to decide which options can show - not already registered,correct gender,correct user type, Registration is open.
     return render(request, 'registration/cand_reg.html', {
         "form": form,
         "elections": elections,
@@ -219,7 +220,7 @@ def ballot(request, ElectionIDx):
 
 @permission_required('elections.can_view_results')
 def admin_tools(request):
-    ElectionFormSet = modelformset_factory(Election, exclude=('Complete',), formset=BaseElectionFormSet, extra=0)
+    ElectionFormSet = modelformset_factory(Election, exclude=('Complete','Seats','Gender'), formset=BaseElectionFormSet, extra=0)
     ResultsFormSet = modelformset_factory(Result, exclude=('ElectionID','Results',), formset=BaseResultsFormSet, extra=0)
     if request.method == 'POST':
         pprint(request.POST)
@@ -235,10 +236,10 @@ def admin_tools(request):
                 return redirect(reverse('elections:home'))
 
         elif 'edit_elections' in request.POST:
-            formset = ElectionFormSet(request.POST)
-            print(formset)
-            if formset.is_valid():
-                formset.save()
+            election_formset = ElectionFormSet(request.POST)
+            print(election_formset.errors)
+            if election_formset.is_valid():
+                election_formset.save()
                 messages.add_message(request, messages.SUCCESS, 'Election settings saved')
                 return redirect(reverse('elections:home'))
             else:
@@ -264,13 +265,13 @@ def admin_tools(request):
 
         open_elections = Election.objects.filter(Complete=False)
         new_election_form = NewElectionForm()
-        formset = ElectionFormSet()
+        election_formset = ElectionFormSet()
         result_formset = ResultsFormSet()
         
         
     return render(request, 'admin/admin_tools.html',{
         'new_election': new_election_form,
-        'formset': formset,
+        'formset': election_formset,
         'elections': open_elections,
         'result_formset': result_formset,
         'results': result_list,
@@ -392,21 +393,6 @@ def signup(request):
         'form': form,
     })
 
-def activate(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = User.objects.get(id=uid)
-    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
-        user = None
-
-    if user is not None and account_activation_token.check_token(user, token):
-        user.is_active = True
-        user.profile.EmailConfirmed = True
-        user.save()
-        login(request, user)
-        return redirect('elections:home')
-    else:
-        return render(request, 'account_activation_invalid.html')
 
 def account_activation_sent(request):
     return render(request, 'registration/account_activation_sent.html')
@@ -471,3 +457,123 @@ def view_results(request):
     return render(request, 'posts/public_results.html', {
         'results': result_list,
     })
+
+@permission_required('elections.can_view_results')
+def create_accounts(request):
+
+    if request.method == 'GET':
+        csv_form = GetCSVForm()
+
+        return render(request, 'registration/create_accounts.html',{
+            'form':csv_form
+        })
+    
+    try:
+        my_csv = request.FILES["csv_file"]
+        # Ensures a CSV file
+        if not my_csv.name.endswith('.csv'):
+            messages.add_message(request, messages.ERROR, "You must upload a .csv file")
+            return HttpResponseRedirect(reverse('elections:create_accounts'))
+        # Ensures file is not too big
+        if my_csv.multiple_chunks():
+            messages.add_message(request, messages.ERROR, "Your file size is too big")
+            return HttpResponseRedirect(reverse('elections:create_accounts'))
+
+        # Turns CSV into useable data
+        file_data = my_csv.read().decode("utf-8")
+        lines = file_data.split("\r\n")
+        pprint(lines[1:-1])
+        if 'teachers_button' in request.POST:
+            for line in lines[1:-1]:
+                fields = line.split(",")
+
+                new_user = User()
+                new_user.username = fields[3].split("@")[0]
+                new_user.first_name = fields[1]
+                new_user.last_name = fields[0]
+                new_user.email = fields[3]
+                password_string = get_random_string(15)
+                new_user.set_password(password_string)
+                new_user.is_active = False
+                new_user.save()
+                new_user.refresh_from_db()
+                if fields[2] == "Male":
+                    new_user.profile.Gender = "M"
+                elif fields[2] == "Female":
+                    new_user.profile.Gender = "F"
+                new_user.profile.UserTypeID = UserType.objects.get(UserType="Teacher")
+                new_user.profile.EmailConfirmed = False
+                new_user.save()
+
+                current_site = get_current_site(request)
+                subject = "Activate your DC-Elects account"
+                message = render_to_string('registration/account_activation_email.html', {
+                    'user': new_user,
+                    'password': password_string,
+                    'domain': current_site.domain,
+                    'uid': urlsafe_base64_encode(force_bytes(new_user.id)),
+                    'token': account_activation_token.make_token(new_user),
+                })
+                new_user.email_user(subject, message)
+
+        elif 'students_button' in request.POST:
+            for line in lines[1:-1]:
+                fields = line.split(",")
+
+                if fields[3][0:2] in ['12','13'] and len(fields[3]) == 3:
+                    new_user = User()
+                    new_user.username = fields[4].split("@")[0]
+                    new_user.first_name = fields[1]
+                    new_user.last_name = fields[0]
+                    new_user.email = fields[4]
+                    password_string = get_random_string(15)
+                    new_user.set_password(password_string)
+                    new_user.is_active = False
+                    new_user.save()
+                    new_user.refresh_from_db()
+                    new_user.profile.Gender = fields[2]
+                    if fields[3][0:2] == '12':
+                        new_user.profile.UserTypeID = UserType.objects.get(UserType="Year12")
+                    elif fields[3][0:2] == '13':
+                        new_user.profile.UserTypeID = UserType.objects.get(UserType="Year13")
+                    new_user.profile.EmailConfirmed = False
+                    new_user.save()
+                
+                    current_site = get_current_site(request)
+                    subject = "Activate your DC-Elects account"
+                    message = render_to_string('registration/account_activation_email.html', {
+                        'user': new_user,
+                        'password': password_string,
+                        'domain': current_site.domain,
+                        'uid': urlsafe_base64_encode(force_bytes(new_user.id)),
+                        'token': account_activation_token.make_token(new_user),
+                    })
+                    new_user.email_user(subject, message)
+        
+        messages.add_message(request, messages.SUCCESS, "Accounts created successfully")
+
+    except Exception as e:
+        messages.add_message(request, messages.ERROR, "An error occured: "+repr(e))
+    
+    
+    return HttpResponseRedirect(reverse('elections:create_accounts'))
+
+
+
+
+
+def activate(request, uidb64, token):
+    try:
+        uid = force_text(urlsafe_base64_decode(uidb64))
+        user = User.objects.get(id=uid)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        user = None
+
+    if user is not None and account_activation_token.check_token(user, token):
+        user.is_active = True
+        user.profile.EmailConfirmed = True
+        user.save()
+        login(request, user)
+        return redirect('elections:home')
+    else:
+        return render(request, 'account_activation_invalid.html')

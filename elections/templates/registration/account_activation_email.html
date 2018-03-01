@@ -1,7 +1,32 @@
 {% autoescape off %}
 Hi {{ user.first_name }},
 
+Welcome to Elect-DC : The platform for electing the prefect team.
+
+You can access Elect-DC at https://www.electdc.me but you need to confirm your account first.
+
+An account has been created allowing you to vote in upcoming elections. The login credentials for this account are:
+
+Username: {{user.username}}
+Password: {{password}}
+
+You will not be able to login until you activate your account by clicking the link below. It is recommended that you change your password once you login.
+
+This system is very new and you will almost certainly encounter bugs as you use the system. A test election has been set up to try and fix as many of these bugs as possible before the real election. You are encouraged to vote in this election.
+
+If you come across any problems, errors or bugs, please email craig7659@dubaicollege.org detailing the problem. This will mean the problem can be fixed and the experience of others improved.
+
+I sincerely thank you for your understanding and co-operation with this process. Your patience is much appreciated.
+
 Please click on the link below to confirm your registration:
 
 http://{{ domain }}{% url 'elections:activate' uidb64=uid token=token %}
+
+Thank you for your participation.
+
+Kind regards,
+
+Craig Buchan, Elect-DC
+
+
 {% endautoescape %}

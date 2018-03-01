@@ -26,7 +26,7 @@
                     <div class="card-body">
                         {% if results|length == 0 %}
 
-                            <p>Nothing here :(</p>
+                            <p>No results have been calculated yet</p>
                         
                         {% else %}
 
@@ -42,9 +42,9 @@
                                 {{ result_formset.management_form }}
                                 {% for form in result_formset %}
                                     {% csrf_token %}
-                                    <div class='card'>
-                                        <div class='card-body w-75 mx-auto'>
-                                            <p class='card-text text-center'>{{form.instance}}: {{form.Public}}</p>
+                                    <div class='card w-75 mx-auto'>
+                                        <div class='card-body text-center'>
+                                            <p class='card-text'>{{form.instance}}: {{form.Public}}</p>
                                             <p>{{form.id}}</p>
                                         </div>
                                     </div>
@@ -82,6 +82,7 @@
                                 <div class='col-12 text-center'>
                                     <p>Description<br>{{new_election.Description}}</p>
                                     <p>Video Link<br>{{new_election.FlipGrid}}</p>
+                                    <p>Gender<br>{{new_election.Gender}}</p>
                                     <button type="submit" class='btn btn-outline-dark' name='new_election'>Create</button><br>
                                 </div>
                             </div>
@@ -99,10 +100,10 @@
                     <div class="card-body">
                         <!-- <h4>Toggle election settings:</h4> -->
                         <form method="post" action="">
-                            
+                            {% csrf_token %}
                             {{ formset.management_form }}
                             {% for form in formset %}
-                                {% csrf_token %}
+                                
                                 <div class='card'>
                                     <div class='card-body w-75 mx-auto'>
                                         

@@ -1,7 +1,7 @@
 {% block header %}
 <head>
     
-    <title>DC Elect</title>
+    <title>Elect-DC</title>
     {% load staticfiles %}
     <link rel='stylesheet' href="{% static 'css/bootstrap.min.css' %}" type='text/css'/>
     <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
@@ -33,16 +33,19 @@
             <!-- Admin only -->
             {% if perms.elections.can_view_results %}
                 <a class='nav-item nav-link' href='/tools/'>Admin</a>
+                <a class='nav-item nav-link' href='/accounts/new/'>Add Users</a>
             {% endif %}
-            <li class='nav-item dropdown'>
-                <a class='nav-link dropdown-toggle' href='#' id='navdropdown1' data-toggle='dropdown'>Account</a>
-                <div class='dropdown-menu'>
-                    <!-- <a class='dropdown-item' href='/profiles/edit/'>Edit Profile</a> -->
-                    <a class='dropdown-item' href='/password/new/'>Password Reset</a>
-                    <a class='dropdown-item' href='/logout/'>Logout</a>
-                    <!-- <a class='dropdown-item' href=''></a> -->
-                </div>
-            </li>
+            {% if user.is_authenticated %}
+                <li class='nav-item dropdown'>
+                    <a class='nav-link dropdown-toggle' href='#' id='navdropdown1' data-toggle='dropdown'>{{ user.get_username }}</a>
+                    <div class='dropdown-menu'>
+                        <!-- <a class='dropdown-item' href='/profiles/edit/'>Edit Profile</a> -->
+                        <a class='dropdown-item' href='/password/new/'>Password Reset</a>
+                        <a class='dropdown-item' href='/logout/'>Logout</a>
+                        <!-- <a class='dropdown-item' href=''></a> -->
+                    </div>
+                </li>
+            {% endif %}
         </div>
         <!-- <a class="nav-link disabled" href="#">Disabled</a> -->
     </nav>
