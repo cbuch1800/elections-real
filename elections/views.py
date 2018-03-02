@@ -166,13 +166,13 @@ def ballot(request, ElectionIDx):
         rankings = request.POST.get('rankings', None)
         rankings = json.loads(rankings)
 
+        print(rankings)
+        print(type(rankings))
+
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
             if len(set(rankings)) == len(rankings): #no rankings are repeated
-                ranks_int = []
-                for i in rankings:
-                    ranks_int.append(int(i))
-                if sorted(ranks_int)[-1] == len(rankings): #no rankings are skipped
+                if sorted(rankings)[-1] == str(len(rankings)): #no rankings are skipped
                     if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) == 0: #User hasn't voted yet in this election
 
                         # Determines how many ranks were submitted
@@ -561,9 +561,6 @@ def create_accounts(request):
     
     
     return HttpResponseRedirect(reverse('elections:create_accounts'))
-
-
-
 
 
 def activate(request, uidb64, token):
