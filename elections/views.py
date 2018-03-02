@@ -136,7 +136,7 @@ def add_candidate(request):
             return redirect(reverse('elections:home'))
     else:
         form = AddCandidateForm(request.user)
-        elections = Election.objects.all().exclude(candidate__UserID=request.user).filter(Gender=request.user.Profile.Gender).filter(CandidateReg=True)
+        elections = Election.objects.all().exclude(candidate__UserID=request.user).filter(Gender=request.user.profile.Gender).filter(CandidateReg=True)
         # filtering of the elections to decide which options can show - not already registered,correct gender,correct user type, Registration is open.
     return render(request, 'registration/cand_reg.html', {
         "form": form,
