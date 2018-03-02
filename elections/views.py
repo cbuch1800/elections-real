@@ -482,6 +482,7 @@ def create_accounts(request):
         # Turns CSV into useable data
         file_data = my_csv.read().decode("utf-8")
         lines = file_data.split("\r\n")
+        pprint(lines)
         pprint(lines[1:-1])
         if 'teachers_button' in request.POST:
             for line in lines[1:-1]:
@@ -540,7 +541,7 @@ def create_accounts(request):
                     new_user.save()
                 
                     current_site = get_current_site(request)
-                    subject = "Activate your DC-Elects account"
+                    subject = "Activate your Elect-DC account"
                     message = render_to_string('registration/account_activation_email.html', {
                         'user': new_user,
                         'password': password_string,
