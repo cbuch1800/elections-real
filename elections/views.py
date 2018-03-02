@@ -169,7 +169,10 @@ def ballot(request, ElectionIDx):
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
             if len(set(rankings)) == len(rankings): #no rankings are repeated
-                if sorted(rankings)[-1] == str(len(rankings)): #no rankings are skipped
+                ranks_int = []
+                for i in rankings:
+                    ranks_int.append(int(i))
+                if sorted(ranks_int)[-1] == len(rankings): #no rankings are skipped
                     if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) == 0: #User hasn't voted yet in this election
 
                         # Determines how many ranks were submitted
