@@ -153,7 +153,7 @@ def ballot(request, ElectionIDx):
 
     try:
         election = Election.objects.get(id=ElectionIDx, VotingOpen=True, Complete=False)
-        allowed = AllowToVote.objects.get(UserTypeID=request.user.Profile.UserTypeID, ElectionID=ElectionIDx)
+        allowed = AllowToVote.objects.get(UserTypeID=request.user.profile.UserTypeID, ElectionID=ElectionIDx)
     except:
         raise Http404()
 
