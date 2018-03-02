@@ -168,7 +168,7 @@ def ballot(request, ElectionIDx):
 
         print(rankings)
         print(type(rankings))
-        messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings, type(rankings)))
+        messages.add_message(request, messages.SUCCESS, '{}, {}, {}'.format(rankings, candidate_order, type(rankings)))
 
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
