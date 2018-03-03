@@ -166,13 +166,11 @@ def ballot(request, ElectionIDx):
         rankings = request.POST.get('rankings', None)
         rankings = json.loads(rankings)
 
-        print(rankings)
-        print(type(rankings))
+        # print(rankings)
+        # print(type(rankings))
         rankings_only = list(filter(None, rankings))
         rankings_only = [int(i) for i in rankings_only]
-        messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings_only, set(rankings_only)))
-
-        # print candidate_order to make sure it's loading properly
+        # messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings_only, set(rankings_only)))
 
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
