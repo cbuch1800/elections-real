@@ -151,6 +151,8 @@ def open_elections(request):
 
 def ballot(request, ElectionIDx):
 
+    #### REDIRECT HERE IF YOU HAVE ALREADY VOTED ####
+
     try:
         election = Election.objects.get(id=ElectionIDx, VotingOpen=True, Complete=False)
         allowed = AllowToVote.objects.get(UserTypeID=request.user.profile.UserTypeID, ElectionID=ElectionIDx)

@@ -63,25 +63,20 @@ $.ajaxSetup({
 
 $(document).ready(function() {
 
-// var metatags = document.getElementsByTagName('meta');
-// var cands = [];
-// for (var i = 0; i < metatags.length; i++) {
-//     cands.push(metatags[i].dataset.id);
-//     // console.log(cands);
-// };
-// cands = JSON.stringify(cands);
-// console.log(cands);
-
 var button = $("#send");
 
 $(button).click(function() {
 
-    var metatags = document.getElementsByTagName('meta');
+    // var metatags = document.getElementsByTagName('meta');
     var cands = [];
-    for (var i = 0; i < metatags.length; i++) {
-        cands.push(metatags[i].dataset.id);
-        // console.log(cands);
-    };
+
+    document.querySelectorAll('meta[data-id]')
+        .forEach(m=>{cands.push(m.dataset.id); console.log(cands);});
+
+    // for (var i = 0; i < metatags.length; i++) {
+    //     cands.push(metatags[i].dataset.id);
+    //     // console.log(cands);
+    // };
     cands = JSON.stringify(cands);
     console.log(cands);
 
