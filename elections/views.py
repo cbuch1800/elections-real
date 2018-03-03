@@ -177,35 +177,40 @@ def ballot(request, ElectionIDx):
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
             if len(set(rankings_only)) == len(rankings_only): #no rankings are repeated
-                if sorted(rankings_only)[-1] == len(rankings_only): #no rankings are skipped
-                    if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) == 0: #User hasn't voted yet in this election
+                if sorted(rankings_only)[0] > 0:
+                    if sorted(rankings_only)[-1] == len(rankings_only): #no rankings are skipped
+                        if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) == 0: #User hasn't voted yet in this election
 
-                        # Determines how many ranks were submitted
-                        ranking_quantity = 0
-                        for i in rankings:
-                            if i != "":
-                                ranking_quantity += 1
-                        # Creates a new list, sorting candidates by their associated rank
-                        ordered_candidates = []
-                        for i in range(1,ranking_quantity+1):
-                            candidate_index = rankings.index(str(i))
-                            ordered_candidates.append(candidate_order[candidate_index])
-                        ballot_processed = json.dumps(ordered_candidates)
+                            # Determines how many ranks were submitted
+                            ranking_quantity = 0
+                            for i in rankings:
+                                if i != "":
+                                    ranking_quantity += 1
+                            # Creates a new list, sorting candidates by their associated rank
+                            ordered_candidates = []
+                            for i in range(1,ranking_quantity+1):
+                                candidate_index = rankings.index(str(i))
+                                ordered_candidates.append(candidate_order[candidate_index])
+                            ballot_processed = json.dumps(ordered_candidates)
 
-                        election = Election.objects.get(id=ElectionIDx)
-                        ballot_instance = CompleteBallot(ElectionID=election, Vote=ballot_processed)
-                        cast_ballot_instance = BallotCast(UserID=request.user, ElectionID=election)
-                        ballot_instance.save()
-                        cast_ballot_instance.save()
-                        alert_text = "Ballot successfully cast."
-                        messages.add_message(request, messages.SUCCESS, 'Ballot successfully cast in {}'.format(election.Name))
+                            election = Election.objects.get(id=ElectionIDx)
+                            ballot_instance = CompleteBallot(ElectionID=election, Vote=ballot_processed)
+                            cast_ballot_instance = BallotCast(UserID=request.user, ElectionID=election)
+                            ballot_instance.save()
+                            cast_ballot_instance.save()
+                            alert_text = "Ballot successfully cast."
+                            messages.add_message(request, messages.SUCCESS, 'Ballot successfully cast in {}'.format(election.Name))
 
+                        else:
+                            form_valid = False
+                            alert_text = "Error. You have already voted in this election."
                     else:
                         form_valid = False
-                        alert_text = "Error. You have already voted in this election."
+                        alert_text = "Error. You must rank candidates sequentially without skipping a rank."
                 else:
                     form_valid = False
-                    alert_text = "Error. You must rank candidates sequentially without skipping a rank."                
+                    alert_text = "Error. You must rank candidates with positive integers."  
+                             
             else:
                 form_valid = False
                 alert_text = "Error. You can not give multiple candidates the same rank."                
