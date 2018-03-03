@@ -328,6 +328,7 @@ def password_change(request):
             messages.add_message(request, messages.SUCCESS, "Password reset.")
             return redirect(reverse('elections:home'))
         else:
+            messages.add_message(request, messages.ERROR, "Error with password reset.")
             return redirect('/password/new/')
     else:
         password_form = PasswordChangeForm(user=request.user)
@@ -589,6 +590,7 @@ def activate(request, uidb64, token):
         user.profile.EmailConfirmed = True
         user.save()
         login(request, user)
+        messages.add_message(request, messages.SUCCESS, 'Account activated.')
         return redirect('elections:home')
     else:
         return render(request, 'account_activation_invalid.html')
