@@ -169,7 +169,7 @@ def ballot(request, ElectionIDx):
         print(rankings)
         print(type(rankings))
         rankings_only = list(filter(None, rankings))
-        messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings, rankings_only))
+        messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings_only, set(rankings_only)))
 
         # print candidate_order to make sure it's loading properly
 
