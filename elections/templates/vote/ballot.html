@@ -67,9 +67,10 @@ var metatags = document.getElementsByTagName('meta');
 var cands = [];
 for (var i = 0; i < metatags.length; i++) {
     cands.push(metatags[i].dataset.id);
-    console.log(cands);
+    // console.log(cands);
 };
 cands = JSON.stringify(cands);
+console.log(cands);
 
 var button = $("#send");
 
