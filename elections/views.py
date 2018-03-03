@@ -231,7 +231,8 @@ def ballot(request, ElectionIDx):
 
     candidates = Candidate.objects.all().filter(ElectionID=ElectionIDx).order_by('?')
     return render(request, 'vote/ballot.html', {
-        "candidates": candidates
+        "candidates": candidates,
+        "election": election,
     })
 
 
