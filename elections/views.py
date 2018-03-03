@@ -160,7 +160,7 @@ def ballot(request, ElectionIDx):
         raise Http404()
 
     if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) > 0:
-        messages.add_message(request, messages.SUCCESS, 'You have already voted in {}'.format(election.Name))
+        messages.add_message(request, messages.ERROR, 'You have already voted in {}'.format(election.Name))
         return redirect(reverse('elections:elections'))
 
     if request.method == 'POST':
