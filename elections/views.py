@@ -168,12 +168,14 @@ def ballot(request, ElectionIDx):
 
         print(rankings)
         print(type(rankings))
-        messages.add_message(request, messages.SUCCESS, '{}, {}, {}'.format(rankings, candidate_order, type(rankings)))
+        rankings_only = list(filter(None, rankings))
+        messages.add_message(request, messages.SUCCESS, '{}, {}'.format(rankings, rankings_only))
 
+        # print candidate_order to make sure it's loading properly
 
         # Validation:
         if ''.join(rankings).isdigit(): #all rankings are numbers
-            if len(set(rankings)) == len(rankings): #no rankings are repeated
+            if len(set(rankings_only)) == len(rankings_only): #no rankings are repeated
                 if sorted(rankings)[-1] == str(len(rankings)): #no rankings are skipped
                     if len(BallotCast.objects.all().filter(UserID=request.user, ElectionID=ElectionIDx)) == 0: #User hasn't voted yet in this election
 
