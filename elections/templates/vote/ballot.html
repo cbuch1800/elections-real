@@ -63,18 +63,28 @@ $.ajaxSetup({
 
 $(document).ready(function() {
 
-var metatags = document.getElementsByTagName('meta');
-var cands = [];
-for (var i = 0; i < metatags.length; i++) {
-    cands.push(metatags[i].dataset.id);
-    // console.log(cands);
-};
-cands = JSON.stringify(cands);
-console.log(cands);
+// var metatags = document.getElementsByTagName('meta');
+// var cands = [];
+// for (var i = 0; i < metatags.length; i++) {
+//     cands.push(metatags[i].dataset.id);
+//     // console.log(cands);
+// };
+// cands = JSON.stringify(cands);
+// console.log(cands);
 
 var button = $("#send");
 
 $(button).click(function() {
+
+    var metatags = document.getElementsByTagName('meta');
+    var cands = [];
+    for (var i = 0; i < metatags.length; i++) {
+        cands.push(metatags[i].dataset.id);
+        // console.log(cands);
+    };
+    cands = JSON.stringify(cands);
+    console.log(cands);
+
     var vals = [];
     $("#main :input").each(function(index) {
         vals.push(this.value);
@@ -83,6 +93,9 @@ $(button).click(function() {
   console.log(vals);
   var url = window.location.pathname;
 console.log(url);
+
+
+
 $.ajax({
     method: "POST",
     url: url,
