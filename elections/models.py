@@ -99,6 +99,9 @@ class BallotCast(models.Model):
     UserID = models.ForeignKey(User, on_delete=models.CASCADE)
     ElectionID = models.ForeignKey(Election, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.UserID.username
+
 class CompleteBallot(models.Model):
     ElectionID = models.ForeignKey(Election, on_delete=models.CASCADE)
     Vote = models.TextField(null=True)
