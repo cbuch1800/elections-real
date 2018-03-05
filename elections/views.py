@@ -329,7 +329,8 @@ def password_change(request):
             messages.add_message(request, messages.SUCCESS, "Password reset.")
             return redirect(reverse('elections:home'))
         else:
-            messages.add_message(request, messages.ERROR, "Error with password reset.")
+            for key,val in password_form.errors:
+                messages.add_message(request, messages.ERROR, val)
             return redirect('/password/new/')
     else:
         password_form = PasswordChangeForm(user=request.user)
