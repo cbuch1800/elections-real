@@ -89,8 +89,13 @@ def CheckQuota(Result):
 
     if len(ElectedCandidates) == Seats:
         print("ELECTION OVER")
+    elif Seats == len(RemainingCandidates):
+        print("ELECTION OVER")
     print("Elected are: ")
     for Cand in ElectedCandidates:
+        print(Cand, end=", ")
+    print("\nRemaining are: ")
+    for Cand in RemainingCandidates:
         print(Cand, end=", ")
     print("\n--------")
 
@@ -183,6 +188,9 @@ def CountSTV(CandidatesList, BallotPapers, NumberElected):
         RemoveBlankBallots(Ballots)
         if len(ElectedCandidates) == Seats:
             break
+        elif Seats == len(RemainingCandidates):
+            ElectedCandidates = RemainingCandidates
+            break
         elif len(ElectedCandidates) == 0:
             EliminateCandidate(ResultsByRound[-1], ResultsByRound[0])
         else:
@@ -195,5 +203,5 @@ def CountSTV(CandidatesList, BallotPapers, NumberElected):
     return ElectedCandidates
 
 
-# ElectionResult = CountSTV(list(CANDIDATES), GetVotes(300), 6)
+# ElectionResult = CountSTV(list(CANDIDATES), GetVotes(70), 6)
 # print(ElectionResult)
