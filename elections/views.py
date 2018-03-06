@@ -595,4 +595,4 @@ def activate(request, uidb64, token):
         messages.add_message(request, messages.SUCCESS, 'Account activated.')
         return redirect('elections:home')
     else:
-        return render(request, 'account_activation_invalid.html')
+        return render(request, 'registration/account_activation_invalid.html')
