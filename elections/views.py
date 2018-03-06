@@ -144,14 +144,12 @@ def add_candidate(request):
     })
 
 def open_elections(request):
-    elections = Election.objects.all().exclude(ballotcast__UserID=request.user).filter(VotingOpen=True)
+    elections = Election.objects.all().exclude(ballotcast__UserID=request.user).filter(VotingOpen=True).filter(Complete=False)
     return render(request, 'vote/open_elections.html', {
         "elections": elections
     })
 
 def ballot(request, ElectionIDx):
-
-    #### REDIRECT HERE IF YOU HAVE ALREADY VOTED ####
 
     try:
         election = Election.objects.get(id=ElectionIDx, VotingOpen=True, Complete=False)
