@@ -87,17 +87,17 @@ def CheckQuota(Result):
                     Ballot.remove(key)
     
 
-    if len(ElectedCandidates) == Seats:
-        print("ELECTION OVER")
-    elif Seats == len(RemainingCandidates):
-        print("ELECTION OVER")
-    print("Elected are: ")
-    for Cand in ElectedCandidates:
-        print(Cand, end=", ")
-    print("\nRemaining are: ")
-    for Cand in RemainingCandidates:
-        print(Cand, end=", ")
-    print("\n--------")
+    # if len(ElectedCandidates) == Seats:
+    #     print("ELECTION OVER")
+    # elif Seats == len(RemainingCandidates):
+    #     print("ELECTION OVER")
+    # print("Elected are: ")
+    # for Cand in ElectedCandidates:
+    #     print(Cand, end=", ")
+    # print("\nRemaining are: ")
+    # for Cand in RemainingCandidates:
+    #     print(Cand, end=", ")
+    # print("\n--------")
 
 def NumberMeetingQuota(Result):
     QuantityElected = 0
@@ -179,11 +179,11 @@ def CountSTV(CandidatesList, BallotPapers, NumberElected):
 
     global QUOTA
     QUOTA = Droop(Ballots, Seats)
-    print("Quota: {}".format(QUOTA))
+    # print("Quota: {}".format(QUOTA))
 
     while True:
         ResultsByRound.append(CountFirstChoice(Ballots))
-        pprint(ResultsByRound[-1])
+        # pprint(ResultsByRound[-1])
         CheckQuota(ResultsByRound[-1])
         RemoveBlankBallots(Ballots)
         if len(ElectedCandidates) == Seats:
